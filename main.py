@@ -856,10 +856,11 @@ class MyPlugin(Star):
     async def active_list_calendar(self, event: AstrMessageEvent, name: str, map: str, server: str):
         """此接口用于查询家园系统中特定鲜花的最高价格及其对应的采集线路，包括区服和地图信息。"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
         logger.info(f"{server}{name}{map}")
-
+        if server is None:
+            server = self.server
         if name in flowers:
             if map in homes:
-                result = api.home_flower(server=server or self.server, name=name, map=map)[map]
+                result = api.home_flower(server=server, name=name, map=map)[map]
                 logger.info(result)
                 content = f"{map}\n"
                 for item in result:
