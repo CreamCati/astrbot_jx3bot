@@ -860,7 +860,7 @@ class MyPlugin(Star):
             if map in homes:
                 result = api.home_flower(server=server, name=name, map=map)[map]
                 logger.info(result)
-                content = f"{map}\n"
+                content = f"{map}-{server}\n"
                 for item in result:
                     content += f"{item['name']}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}\n"
                 yield event.plain_result(content.strip())
