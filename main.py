@@ -834,7 +834,7 @@ class MyPlugin(Star):
 
     # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
     @filter.command("日常")
-    async def helloworld(self, event: AstrMessageEvent):
+    async def active_calendar(self, event: AstrMessageEvent):
         result = api.active_calendar(server=self.server)
 
         yield event.plain_result(f"【时间】{result['date']} 星期{result['week']}\n"
@@ -843,10 +843,10 @@ class MyPlugin(Star):
                                  )
 
     @filter.command("日常预测")
-    async def helloworld(self, event: AstrMessageEvent, a: int):
+    async def active_list_calendar(self, event: AstrMessageEvent, a: int):
         """日常预测 15   ——预测15天后的日常"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
         result = api.active_list_calendar(num=a)['data']
-
+        logger.info(str(result))
         yield event.plain_result(f"【时间】{result['date']} 星期{result['week']}\n"
                                  f"【大战】{result['war']}\n"
                                  f"【战场】{result['battle']}"
