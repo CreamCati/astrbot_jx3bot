@@ -836,6 +836,7 @@ class MyPlugin(Star):
     # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
     @filter.command("日常")
     async def active_calendar(self, event: AstrMessageEvent):
+        """日常查询"""
         result = api.active_calendar(server=self.server)
 
         yield event.plain_result(f"【时间】{result['date']} 星期{result['week']}\n"
@@ -843,15 +844,18 @@ class MyPlugin(Star):
                                  f"【战场】{result['battle']}"
                                  )
 
-    @filter.command("日常预测")
-    async def active_list_calendar(self, event: AstrMessageEvent, a: int):
-        """日常预测 15   ——预测15天后的日常"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
-        result = api.active_list_calendar(num=a)['data']
-        logger.info(str(result))
-        yield event.plain_result(f"【时间】{result['date']} 星期{result['week']}\n"
-                                 f"【大战】{result['war']}\n"
-                                 f"【战场】{result['battle']}"
+    @filter.command("家园鲜花")
+    async def active_list_calendar(self, event: AstrMessageEvent, name:str,map:str,server:str):
+        """此接口用于查询家园系统中特定鲜花的最高价格及其对应的采集线路，包括区服和地图信息。"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
+        result = api.home_flower(server=server or self.server,name=name,map=map)
+        logger.info(result)
+        yield event.plain_result(f""
                                  )
+
+
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
+
+
+
