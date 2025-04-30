@@ -823,6 +823,14 @@ class AsyncJX3API:
 
 api = JX3API(token="123", ticket="")
 
+flowers = {
+    "绣球花", "牵牛", "玫瑰", "百合", "羽扇豆花", "荧光菌孢子", "铃兰"
+                                                                "芜菁", "青菜", "麦子", "葫芦"
+}
+homes = {
+    "枫叶泊天苑", "浣花水榭", "九寨沟镜海", "枫叶泊乐苑", "广陵邑"
+}
+
 
 @register("jx3helper", "Ming", "一个简单的 剑网三 机器人", "1.0.0")
 class MyPlugin(Star):
@@ -848,13 +856,19 @@ class MyPlugin(Star):
     async def active_list_calendar(self, event: AstrMessageEvent, name: str, map: str, server: str):
         """此接口用于查询家园系统中特定鲜花的最高价格及其对应的采集线路，包括区服和地图信息。"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
         logger.info(f"{server}{name}{map}")
-        result = api.home_flower(server=server or self.server, name=name, map=map)[map]
-        logger.info(result)
-        content = f"{map}\n"
-        for item in result:
-            logger.info(item['name'])
-            content += f"{item['name']}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}\n"
-        yield event.plain_result(content.strip())
+
+        if name in flowers:
+            if map in homes:
+                result = api.home_flower(server=server or self.server, name=name, map=map)[map]
+                logger.info(result)
+                content = f"{map}\n"
+                for item in result:
+                    content += f"{item['name']}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}\n"
+                yield event.plain_result(content.strip())
+            else:
+                yield event.plain_result("家园输入有误(如：九寨沟镜海)")
+        else:
+            yield event.plain_result("花名输入有误")
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
