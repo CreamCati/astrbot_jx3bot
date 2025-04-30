@@ -855,7 +855,7 @@ class MyPlugin(Star):
     @filter.command("家园鲜花")
     async def active_list_calendar(self, event: AstrMessageEvent, name: str, map: str, server="唯我独尊"):
         """此接口用于查询家园系统中特定鲜花的最高价格及其对应的采集线路，包括区服和地图信息。"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
-
+        logger.info(f"server{server}")
         if name in flowers:
             if map in homes:
                 result = api.home_flower(server=server, name=name, map=map)[map]
