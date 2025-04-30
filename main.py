@@ -850,10 +850,10 @@ class MyPlugin(Star):
         logger.info(f"{server}{name}{map}")
         result = api.home_flower(server=server or self.server, name=name, map=map)[map]
         logger.info(result)
-        content = ""
+        content = f"{map}\n"
         for item in result:
             logger.info(item['name'])
-            content += f"{item['name']}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}"
+            content += f"{item['name']}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}\n"
         yield event.plain_result(content.strip())
 
     async def terminate(self):
