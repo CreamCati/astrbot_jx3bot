@@ -853,7 +853,7 @@ class MyPlugin(Star):
         content = ""
         for item in result:
             #content += f"{item['name']}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}"
-            content+=item
+            content+=str(item)+"\n"
         yield event.plain_result(content.strip())
 
     async def terminate(self):
