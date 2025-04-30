@@ -853,6 +853,7 @@ class MyPlugin(Star):
         logger.info(result)
 
         for item in result:
+            logger.info(item)
             content = f"{item["name"]}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}"
             all += content
         yield event.plain_result(all)
