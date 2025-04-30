@@ -853,7 +853,7 @@ class MyPlugin(Star):
         content = ""
         for item in result:
             logger.info(item['name'])
-            #content += f"{item['name']}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}"
+            content += f"{item['name']}\n颜色：{item['color']}\n价格：{item['price']}\n分线：{item['line']}"
             content+=str(item)+"\n"
         yield event.plain_result(content.strip())
 
