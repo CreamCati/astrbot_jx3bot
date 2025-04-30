@@ -835,7 +835,7 @@ class MyPlugin(Star):
         """这是一个 hello world 指令"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
         result = api.active_calendar(server="梦江南")
 
-        logger.info(event.event.get_messages())
+        logger.info(event.get_messages())
         yield event.plain_result(f"【时间】${result['date']} 星期${result['week']}\n"
                                  f"【大战】${result['war']}"
                                  f"【战场】${result['battle']}"
