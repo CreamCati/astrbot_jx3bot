@@ -8,6 +8,7 @@ class APIError(BaseException):
         self.code = code
         self.msg
 
+
 import json
 import logging
 import os
@@ -19,8 +20,6 @@ from urllib.request import Request, urlopen
 
 import aiohttp
 
-
-
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s][%(levelname)s][%(module)s:%(funcName)s:%(lineno)d]: %(message)s",
@@ -29,7 +28,7 @@ logging.basicConfig(
 
 class JX3API:
     def __init__(
-        self, *, token=None, ticket=None, base_url="https://www.jx3api.com"
+            self, *, token=None, ticket=None, base_url="https://www.jx3api.com"
     ):
         self.token = token or os.getenv("JX3API_TOKEN")
         self.ticket = ticket or os.getenv("JX3API_TICKET")
@@ -374,18 +373,18 @@ class JX3API:
         return self.request(endpoint="/data/saohua/content")
 
     def sound_converter(
-        self,
-        *,
-        appkey,
-        access,
-        secret,
-        text,
-        voice="Aitong",
-        format="MP3",
-        sample_rate=16000,
-        volume=50,
-        speech_rate=0,
-        pitch_rate=0,
+            self,
+            *,
+            appkey,
+            access,
+            secret,
+            text,
+            voice="Aitong",
+            format="MP3",
+            sample_rate=16000,
+            volume=50,
+            speech_rate=0,
+            pitch_rate=0,
     ):
         return self.request(
             endpoint="/data/sound/converter",
@@ -404,7 +403,7 @@ class JX3API:
 
 class AsyncJX3API:
     def __init__(
-        self, *, token=None, ticket=None, base_url="https://www.jx3api.com"
+            self, *, token=None, ticket=None, base_url="https://www.jx3api.com"
     ):
         self.token = token or os.getenv("JX3API_TOKEN")
         self.ticket = ticket or os.getenv("JX3API_TICKET")
@@ -422,10 +421,10 @@ class AsyncJX3API:
         kwargs["ticket"] = self.ticket
 
         async with aiohttp.request(
-            "GET",
-            urljoin(base=self.base_url, url=endpoint),
-            data=json.dumps(kwargs).encode(encoding="utf-8"),
-            headers={"token": token} if (token := self.token) else {},
+                "GET",
+                urljoin(base=self.base_url, url=endpoint),
+                data=json.dumps(kwargs).encode(encoding="utf-8"),
+                headers={"token": token} if (token := self.token) else {},
         ) as resp:
             if (data := await resp.json(loads=json.loads))["code"] != HTTPStatus.OK:
                 raise APIError(code=data["code"], msg=data["msg"])
@@ -689,7 +688,7 @@ class AsyncJX3API:
 
     @require_token
     async def active_monster(
-        self,
+            self,
     ):
         return await self.request(endpoint="/data/active/monster")
 
@@ -772,18 +771,18 @@ class AsyncJX3API:
         return await self.request(endpoint="/data/saohua/content")
 
     async def sound_converter(
-        self,
-        *,
-        appkey,
-        access,
-        secret,
-        text,
-        voice="Aitong",
-        format="MP3",
-        sample_rate=16000,
-        volume=50,
-        speech_rate=0,
-        pitch_rate=0,
+            self,
+            *,
+            appkey,
+            access,
+            secret,
+            text,
+            voice="Aitong",
+            format="MP3",
+            sample_rate=16000,
+            volume=50,
+            speech_rate=0,
+            pitch_rate=0,
     ):
         return await self.request(
             endpoint="/data/sound/converter",
@@ -820,11 +819,15 @@ class AsyncJX3API:
 
                 yield data
 
+
 api = JX3API(token="123", ticket="")
+
+
 @register("jx3helper", "Ming", "一个简单的 剑网三 机器人", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
+        self.server = "唯我独尊"
 
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
@@ -832,19 +835,22 @@ class MyPlugin(Star):
     # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
     @filter.command("日常")
     async def helloworld(self, event: AstrMessageEvent):
-        """这是一个 hello world 指令"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
-        result = api.active_calendar(server="梦江南")
+        result = api.active_calendar(server=self.server)
 
-        logger.info(event.get_messages())
-        logger.info(str(result))
         yield event.plain_result(f"【时间】{result['date']} 星期{result['week']}\n"
                                  f"【大战】{result['war']}\n"
                                  f"【战场】{result['battle']}"
-                                 f"【门派】{result['rescue']}\n"
-                                 f"【驰援】藏剑·乱世"
-                                 f""
-                                 f"")  # 发送一条纯文本消息
+                                 )
+
+    @filter.command("日常预测")
+    async def helloworld(self, event: AstrMessageEvent, a: int):
+        """日常预测 15   ——预测15天后的日常"""  # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
+        result = api.active_list_calendar(num=a)['data']
+
+        yield event.plain_result(f"【时间】{result['date']} 星期{result['week']}\n"
+                                 f"【大战】{result['war']}\n"
+                                 f"【战场】{result['battle']}"
+                                 )
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
-
