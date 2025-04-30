@@ -53,6 +53,7 @@ class JX3API:
 
         with closing(urlopen(req)) as resp:
             if (data := json.loads(resp.read()))["code"] != HTTPStatus.OK:
+                logger.info(str(data))
                 raise APIError(code=data["code"], msg=data["msg"])
 
         return data["data"]
