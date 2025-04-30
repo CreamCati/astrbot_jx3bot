@@ -836,11 +836,12 @@ class MyPlugin(Star):
         result = api.active_calendar(server="梦江南")
 
         logger.info(event.get_messages())
-        yield event.plain_result(f"【时间】${result['date']} 星期${result['week']}\n"
-                                 f"【大战】${result['war']}"
-                                 f"【战场】${result['battle']}"
-                                 f""
-                                 f""
+        logger.info(str(result))
+        yield event.plain_result(f"【时间】{result['date']} 星期{result['week']}\n"
+                                 f"【大战】{result['war']}\n"
+                                 f"【战场】{result['battle']}"
+                                 f"【门派】{result['rescue']}\n"
+                                 f"【驰援】藏剑·乱世"
                                  f""
                                  f"")  # 发送一条纯文本消息
 
